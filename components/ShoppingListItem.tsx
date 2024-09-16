@@ -39,11 +39,6 @@ export function ShoppingListItem({ name }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-  },
   itemContainer: {
     paddingVertical: 16,
     paddingHorizontal: 8,
