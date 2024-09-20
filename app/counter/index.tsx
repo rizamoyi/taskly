@@ -5,8 +5,9 @@ import { theme } from "../../theme";
 import { registerForPushNotificationsAsync } from "../../utils/registerForPushNotificationsAsync";
 import { useEffect, useState } from "react";
 import { Duration, intervalToDuration, isBefore } from "date-fns";
+import { TimeSegment } from "../../components/TimeSegment";
 
-// 10 secionds from now
+// 10 seconds from now
 const timestamp = Date.now() + 10 * 1000;
 
 type CountDownStatus = {
@@ -60,13 +61,45 @@ export default function CounterScreen() {
     }
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        status.isOverdue ? styles.containerLate : undefined,
+      ]}
+    >
+      {status.isOverdue ? (
+        <Text style={[styles.heading, styles.whiteText]}>Thing overdue by</Text>
+      ) : (
+        <Text style={styles.heading}>Thing due in...</Text>
+      )}
+      <View style={styles.row}>
+        <TimeSegment
+          unit="Days"
+          number={status.distance.days ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Hours"
+          number={status.distance.hours ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Minutes"
+          number={status.distance.minutes ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+        <TimeSegment
+          unit="Seconds"
+          number={status.distance.seconds ?? 0}
+          textStyle={status.isOverdue ? styles.whiteText : undefined}
+        />
+      </View>
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
         onPress={scheduleNotification}
       >
-        <Text style={styles.butttonText}>Schedule notification</Text>
+        <Text style={styles.butttonText}>I've done the thing!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,6 +112,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
   },
+  containerLate: {
+    backgroundColor: theme.colorRed,
+  },
   button: {
     backgroundColor: theme.colorBlack,
     padding: 12,
@@ -89,5 +125,17 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     textTransform: "uppercase",
     letterSpacing: 1,
+  },
+  row: {
+    flexDirection: "row",
+    marginBottom: 24,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
+  },
+  whiteText: {
+    color: theme.colorWhite,
   },
 });
